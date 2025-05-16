@@ -1,0 +1,11 @@
+bWAPP
+Step 1: Pull bWAPP Docker image – sudo docker pull raesene/bwapp
+Step 2: Run bWAPP Docker container - sudo docker run -d -p 80:80 raesene/bwapp
+Step 3: Open in Browser -  http://localhost/install.php
+               Login – bee
+               Passwd – bug
+1.Sql injection (get/search)– in search bar -   ' OR '1'='1  (should list all the movies) 
+2.OS Command Injection – in input tab after the www.gov - | ls
+3.Reflected XSS ->Go to: XSS → Reflected
+                                Payload: <script>alert('XSS')</script>
+                               Shows alert if vulnerable
