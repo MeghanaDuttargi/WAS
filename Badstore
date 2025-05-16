@@ -93,3 +93,34 @@ Step 5: Cleanup
 To stop and remove the container after testing:
 sudo docker stop badstore
 sudo docker rm badstore
+
+
+=========================================================================================================================================================================
+BadStore
+A deliberately insecure web app simulating online shopping with poor validation.
+
+Step 1: Pull Docker Image
+docker pull jvhoof/badstore-docker
+
+Step 2: Run the Container
+docker run -d -p 80:80 jvhoof/badstore-docker
+
+Step 3: Access in Browser
+http://localhost
+
+BadStore is now ready for testing and exploitation!
+
+Access: http://localhost
+
+Test 1: Reflected XSS
+Search for: <script>alert('XSS')</script>
+Triggers popup if vulnerable
+
+Test 2: Stored XSS
+Submit the above payload via the feedback form.
+Revisit admin/feedback section to trigger the stored script
+
+Test 3: Cookie Theft / Session Hijack
+Use XSS to grab document.cookie and simulate session stealing
+
+BadStore is vulnerable to XSS, insecure forms, and session handling flaws.
