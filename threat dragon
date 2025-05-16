@@ -1,0 +1,4 @@
+1.   wget https://github.com/OWASP/threat-dragon/releases/download/v2.4.1/Threat-Dragon-ng-2.4.1.AppImage 
+2.   chmod +x Threat-Dragon-ng-2.4.1.AppImage
+3.   ./Threat-Dragon-ng-2.4.1.AppImage
+
