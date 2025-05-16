@@ -1,0 +1,32 @@
+XVuln
+A vulnerable stack replicating real CVEs in services like Apache, Tomcat, and others.
+
+Step 1: Clone the Repo
+git clone https://github.com/CoolerVoid/X-Vuln-Stack.git
+cd X-Vuln-Stack
+
+Step 2: Build Docker Container
+docker build -t xvuln .
+
+Step 3: Run the Container
+docker run -d -p 9000:80 xvuln
+
+Step 4: Access in Browser
+http://localhost:9000
+
+XVuln is now ready for testing and exploitation!
+
+Access: http://localhost:9000
+
+Test 1: Local File Inclusion
+If URL is like ?page=index, change to:
+?page=../../../../etc/passwd
+
+Test 2: Remote Code Execution
+Look for file upload or eval() injection points, use payloads like:
+<?php system('id'); ?>
+
+Test 3: CVE Simulation
+Refer to CVE descriptions in the repo to reproduce known exploits
+
+XVuln simulates real-world CVEs for LFI, RCE, XSS, and insecure configs.
